@@ -1,0 +1,18 @@
+.nav-header {
+    padding: 12px;   
+}
+
+.nav-item {
+
+    padding: 12px;
+    :hover {
+        opacity: 0.5;
+    }
+
+    &__text {
+        text-decoration: none;
+
+    }
+
+    
+}
