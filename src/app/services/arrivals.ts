@@ -1,6 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { collectionData, Firestore, addDoc } from '@angular/fire/firestore';
-import { collection, deleteDoc, doc } from '@firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  orderBy,
+  query,
+} from '@firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +14,8 @@ import { collection, deleteDoc, doc } from '@firebase/firestore';
 export class Arrivals {
   firestore = inject(Firestore);
   arrivalsCollection = collection(this.firestore, 'arrivals');
-  arrivals$ = collectionData(this.arrivalsCollection, { idField: 'id' });
+  arrivalsQuery = query(this.arrivalsCollection, orderBy('date', 'desc'));
+  arrivals$ = collectionData(this.arrivalsQuery, { idField: 'id' });
 
   constructor() {}
 
