@@ -1,0 +1,50 @@
+<div
+  class="container d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="border border- rounded-1 p-4 shadow" [style.min-width]="'50%'">
+    <h3 class="text-center mb-4">CleanCo - Iniciar Sesion</h3>
+    <form [formGroup]="loginForm">
+      <div class="form-floating mb-3">
+        <input
+          formControlName="email"
+          class="form-control"
+          id="emailInput"
+          placeholder="name@example.com"
+          [ngClass]="{'is-invalid':isEmailInvalid()}"
+        />
+        <label for="emailInput">Email</label>
+        <span
+          class="text-danger ms-1"
+          *ngIf="isEmailInvalid()"
+          [style.font-size]="'12px'"
+          >Email invalido</span
+        >
+      </div>
+      <div class="form-floating">
+        <input
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [ngClass]="{'is-invalid':isPasswordInvalid()}"
+          id="passwInput"
+          placeholder="Password"
+        />
+        <label for="passwInput">Contraseña</label>
+      </div>
+
+      <span class="text-danger ms-1 mt-1" [style.font-size]="'12px'" *ngIf="error">Error en el usuario/contraseña</span>
+      <button
+        class="btn btn-outline-primary mt-4 w-100 is-inactive"
+        type="submit"
+        [disabled]="isLoading"
+        (click)="onSubmit()"
+      >
+        <span *ngIf="!isLoading; else spinner"> Acceder </span>
+        <ng-template #spinner>
+          <span class="spinner-border"></span>
+        </ng-template>
+      </button>
+    </form>
+  </div>
+</div>
