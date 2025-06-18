@@ -6,6 +6,7 @@ import {
   doc,
   orderBy,
   query,
+  updateDoc,
 } from '@firebase/firestore';
 
 @Injectable({
@@ -44,5 +45,11 @@ export class Arrivals {
     } catch (e) {
       console.log(`Error on delete arrival with id: ${id} `);
     }
+  }
+
+  async updateArrival(arrivalId: string, updatedData: any) {
+    console.log('updatedData', updatedData);
+    const docRef = doc(this.firestore, `arrivals/${arrivalId}`);
+    await updateDoc(docRef, updatedData);
   }
 }

@@ -1,0 +1,50 @@
+<div
+  class="modal fade"
+  [id]="targetId"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{title}}</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formGroup">
+          <div *ngFor="let field of formFields; let i = index">
+            <input
+              [formControlName]="field.name"
+              class="form-control mb-2"
+              [placeholder]="field.placeholder"
+              [ngClass]="{'is-invalid':isValidField(field.name)}"
+              [type]="field.inputType || 'text'"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="handleOnSubmit()"
+          (keyup.enter)="handleOnSubmit()"
+          data-bs-dismiss="modal"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

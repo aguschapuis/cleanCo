@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg bg-primary">
-  <div class="container-fluid">
+<nav class="navbar bg-primary d-flex justify-content-between">
+  <div class="container-fluid d-flex align-items-center col">
     <a
       class="navbar-brand cursor-pointer ms-2"
       appCursorPointer
@@ -10,17 +10,9 @@
       <fa-icon [icon]="menuIcon" class="text-white"></fa-icon>
     </a>
   </div>
-  <button
-    class="btn btn-info me-2 w-25"
-    data-bs-toggle="modal"
-    data-bs-target="#staticBackdrop"
-  >
-    <span>+ Agregar coche</span>
-  </button>
+
 </nav>
 
-
-<app-create-arrival-modal></app-create-arrival-modal>
 
 <div
   class="bg-primary text-white offcanvas offcanvas-start"

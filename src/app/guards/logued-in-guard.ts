@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {
-  CanActivate,
-  CanActivateChild,
-  GuardResult,
-  MaybeAsync,
-  Router,
-} from '@angular/router';
+import { CanActivateChild, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { map, take } from 'rxjs';
 
@@ -18,7 +12,6 @@ export class LoguedInGuard implements CanActivateChild {
     return this.auth.user$.pipe(
       take(1),
       map((user) => {
-        console.log('user', user);
         const isLoggedIn = user;
         if (isLoggedIn) {
           return true;
@@ -28,12 +21,5 @@ export class LoguedInGuard implements CanActivateChild {
         }
       })
     );
-    // console.log('activate: ', this.auth.user$);
-    if (this.auth.user$ !== null) {
-      return true;
-    } else {
-      this.router.navigate(['/login']);
-      return false;
-    }
   }
 }
