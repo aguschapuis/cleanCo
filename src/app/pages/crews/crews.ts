@@ -2,24 +2,25 @@ import { Component } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Crews as CrewService } from '../../services/crews';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime } from 'rxjs';
-import {
-  FormField,
-  GenericModalForm,
-} from '../../components/generic-modal-form/generic-modal-form';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField } from '../../components/generic-modal-form/generic-modal-form';
+import { GenericPaginatedTable } from '../../components/generic-paginated-table/generic-paginated-table';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-crews',
-  imports: [FontAwesomeModule, ReactiveFormsModule, GenericModalForm],
+  imports: [
+    FontAwesomeModule,
+    ReactiveFormsModule,
+    GenericPaginatedTable,
+    CommonModule,
+  ],
   templateUrl: './crews.html',
   styleUrl: './crews.scss',
 })
 export class Crews {
   removeIcon = faTrash;
   allCrews: any[] = [];
-  filtreredCrews: any[] = [];
-  filterControl = new FormControl();
 
   formFields: FormField[] = [
     {
@@ -45,21 +46,17 @@ export class Crews {
     },
   ];
 
+  tableTitles = ['DNI', 'Nombre', 'Apellido'];
+
+  createInfo = {
+    buttonText: '+ Crear empleado',
+    modalTitle: 'Ingresar nuevo empleado',
+  };
+
   constructor(private crewService: CrewService) {
     crewService.crews$.subscribe((crews) => {
       this.allCrews = crews;
-      this.filtreredCrews = crews;
     });
-  }
-
-  ngOnInit(): void {
-    this.filterControl.valueChanges
-      .pipe(debounceTime(300))
-      .subscribe((term: string) => {
-        this.filtreredCrews = this.allCrews.filter(
-          (c) => c.name.includes(term) || c.lastname.includes(term)
-        );
-      });
   }
 
   handleOnSubmit = (values: any) => {

@@ -4,18 +4,10 @@ import { CommonModule } from '@angular/common';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CursorPointer } from '../../directives/cursor-pointer';
-import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { debounceTime } from 'rxjs';
-import {
-  FormField,
-  GenericModalForm,
-} from '../../components/generic-modal-form/generic-modal-form';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormField } from '../../components/generic-modal-form/generic-modal-form';
 import { Crews } from '../../services/crews';
+import { GenericPaginatedTable } from '../../components/generic-paginated-table/generic-paginated-table';
 
 @Component({
   selector: 'app-home',
@@ -24,21 +16,15 @@ import { Crews } from '../../services/crews';
     FontAwesomeModule,
     CursorPointer,
     ReactiveFormsModule,
-    GenericModalForm,
     FormsModule,
+    GenericPaginatedTable,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
-  arrivals = [];
   removeIcon = faTrash;
-  arrivalsPages: any[] = [];
-  currentPage = 0;
-  pageSize = 8;
-  filtredArrivals: any[] = [];
   allArrivals: any[] = [];
-  codeSearch = new FormControl('', [Validators.maxLength(5)]);
   crews: any[] = [];
 
   formFields: FormField[] = [
@@ -64,6 +50,21 @@ export class Home {
     },
   ];
 
+  tableTitles = [
+    'Fecha',
+    'Nro Coche',
+    'Horario ingreso',
+    'Observaciones',
+    'Limpiado por',
+    'Estado',
+    'Eliminar',
+  ];
+
+  createInfo = {
+    buttonText: '+ Crear ingreso',
+    modalTitle: 'Ingresar nuevo coche',
+  };
+
   getCurrentTimeString(): string {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
@@ -82,7 +83,6 @@ export class Home {
   };
 
   onRemove(id: string) {
-    console.log('remove');
     this.arrivalsService.removeArrival(id);
   }
 
@@ -104,16 +104,8 @@ export class Home {
   }
 
   getTimeString(date: string) {
-    console.log('date', date);
     const formatedDate = new Date(date);
     return `${formatedDate.getHours()}:${formatedDate.getMinutes()}`;
-  }
-
-  onChangePage(page: number) {
-    console.log('page', page);
-    if (page >= 0 && page < this.arrivalsPages.length) {
-      this.currentPage = page;
-    }
   }
 
   async onChangeCleaner(arrivalId: string, crewId: Event) {
@@ -126,31 +118,11 @@ export class Home {
 
   ngOnInit(): void {
     this.arrivalsService.arrivals$.subscribe((arrivals) => {
-      this.filtredArrivals = arrivals;
       this.allArrivals = arrivals;
-    });
-    console.log('filtr', this.filtredArrivals);
-
-    // this.cleaner.valueChanges.subscribe((crew: any) => {
-
-    // });
-
-    this.codeSearch.valueChanges.pipe(debounceTime(300)).subscribe((term) => {
-      console.log('cambiando a : ', term);
-      this.filtredArrivals = this.allArrivals.filter((a) =>
-        a.code.includes(term)
-      );
     });
   }
 
   constructor(public arrivalsService: Arrivals, private crewService: Crews) {
-    arrivalsService.arrivals$.subscribe((res) => {
-      this.arrivalsPages = Array.from(
-        { length: Math.round(res.length / this.pageSize) },
-        (_, i) => i + 1
-      );
-    });
-
     crewService.crews$.subscribe((crewsList) => {
       this.crews = crewsList;
     });
