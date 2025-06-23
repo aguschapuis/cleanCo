@@ -1,15 +1,12 @@
-
-
 <app-generic-paginated-table
   [formFields]="formFields"
   [onSubmit]="onSubmit"
-  [title]="'olanda'"
   [tbodyReference]="homeTableBody"
-  *ngIf="allArrivals.length> 0"
   [data]="allArrivals"
   [pageSize]="8"
   [tableTitles]="tableTitles"
   searchField="code"
+  searchForTitle="numero de coche"
   [createInfo]="createInfo"
 >
 </app-generic-paginated-table>
@@ -18,9 +15,9 @@
   <tbody>
     @for (arrival of data; track arrival.id){
     <tr>
-      <td>{{arrival['date'] | date: 'dd/MM'}}</td>
-      <th>{{arrival['code']}}</th>
-      <td>{{arrival['date'] | date: 'hh:mm'}}</td>
+      <td>{{ arrival['date']?.toDate() | date: 'dd/MM' }}</td>
+      <th>{{ arrival['code'] }}</th>
+      <td>{{ arrival['date']?.toDate() | date: 'HH:mm' }}</td>
       <td>{{arrival['observations']}}</td>
       <td>
         <select

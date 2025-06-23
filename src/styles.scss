@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Edge */
+  }
+}

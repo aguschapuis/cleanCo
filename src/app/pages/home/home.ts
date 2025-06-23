@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormField } from '../../components/generic-modal-form/generic-modal-form';
 import { Crews } from '../../services/crews';
 import { GenericPaginatedTable } from '../../components/generic-paginated-table/generic-paginated-table';
+import { DateHelpers } from '../../helpers/dateHelpers';
 
 @Component({
   selector: 'app-home',
@@ -36,7 +37,7 @@ export class Home {
       placeholder: 'Numero de coche',
     },
     {
-      initialValue: this.getCurrentTimeString(),
+      initialValue: DateHelpers.getCurrentTimeString(),
       inputType: 'time',
       name: 'date',
       validators: [],
@@ -65,12 +66,6 @@ export class Home {
     modalTitle: 'Ingresar nuevo coche',
   };
 
-  getCurrentTimeString(): string {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
   onSubmit = (values: any) => {
     const date = new Date();
     const dateData = values.date.split(':');
@@ -117,12 +112,15 @@ export class Home {
   }
 
   ngOnInit(): void {
-    this.arrivalsService.arrivals$.subscribe((arrivals) => {
-      this.allArrivals = arrivals;
-    });
+    if (this.arrivalsService.arrivals$) {
+      this.arrivalsService.arrivals$.subscribe((arrivals) => {
+        this.allArrivals = arrivals;
+      });
+    }
   }
 
   constructor(public arrivalsService: Arrivals, private crewService: Crews) {
+    arrivalsService.loadAllArrivals();
     crewService.crews$.subscribe((crewsList) => {
       this.crews = crewsList;
     });

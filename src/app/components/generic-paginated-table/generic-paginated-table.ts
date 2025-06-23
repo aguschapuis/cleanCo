@@ -18,6 +18,7 @@ export class GenericPaginatedTable {
   currentPage = 0;
   searchControl = new FormControl('');
   filtredData: any[] = [];
+  isMobile = false;
 
   @Input()
   formFields!: FormField[];
@@ -33,6 +34,9 @@ export class GenericPaginatedTable {
 
   @Input()
   searchField!: string;
+
+  @Input()
+  searchForTitle!: string;
 
   @Input()
   pageSize!: number;
@@ -57,11 +61,13 @@ export class GenericPaginatedTable {
         );
         this.setPages();
       });
+    this.isMobile = window.innerWidth < 768;
   }
 
   ngOnChanges(changes: any): void {
     if (changes.data) {
       this.filtredData = changes.data.currentValue;
+      this.setPages();
     }
   }
 

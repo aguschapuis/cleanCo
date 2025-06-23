@@ -47,6 +47,7 @@ export class GenericModalForm {
   };
 
   ngOnInit(): void {
+    console.log('oninit');
     const group: { [key: string]: any } = {};
 
     this.formFields.forEach((field) => {
@@ -56,8 +57,23 @@ export class GenericModalForm {
     this.formGroup = this.fb.group(group);
   }
 
+  ngOnChanges(changes: any): void {
+    console.log('changes', changes);
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+  }
+
   handleOnSubmit = () => {
     this.onSubmit(this.formGroup.value);
-    this.formGroup.reset();
+
+    const group: { [key: string]: any } = {};
+
+    this.formFields.forEach((field) => {
+      group[field.name] = field.initialValue;
+    });
+
+    console.log('group', group);
+
+    this.formGroup.reset(group);
   };
 }

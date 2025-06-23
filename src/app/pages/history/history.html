@@ -1,3 +1,58 @@
-<p>history works!</p>
-<span>{{dateInput.value}}</span>
-<input class="input-group-sm input-group-text" type="date" [formControl]="dateInput"/>
+
+<div class="container mt-4">
+
+    <span>Buscar por dia</span>
+    <input
+    class="input-group-sm input-group-text"
+    type="date"
+    [formControl]="dateInput"
+    />
+</div>
+
+<app-generic-paginated-table
+  *ngIf="!loading"
+  [formFields]="formFields"
+  [onSubmit]="onSubmit"
+  [title]="'olanda'"
+  [tbodyReference]="homeTableBody"
+  [data]="dayArrivals"
+  [pageSize]="8"
+  [tableTitles]="tableTitles"
+  searchForTitle="numero de coche"
+  searchField="code"
+  [createInfo]="createInfo"
+>
+</app-generic-paginated-table>
+
+<ng-template #homeTableBody let-data="data">
+  <tbody>
+    @for (arrival of data; track arrival.id){
+    <tr>
+      <td>{{ arrival['date']?.toDate() | date: 'dd/MM' }}</td>
+      <th>{{ arrival['code'] }}</th>
+      <td>{{ arrival['date']?.toDate() | date: 'HH:mm' }}</td>
+      <td>{{arrival['observations']}}</td>
+      <td>
+        <select
+          class="btn btn-danger dropdown-toggle w-50"
+          [ngModel]="arrival.cleaner?.id"
+          (ngModelChange)="onChangeCleaner(arrival.id, $event)"
+        >
+          <option [value]="''" disabled *ngIf="!arrival.cleaner">
+            Seleccionar
+          </option>
+          <option *ngFor="let crew of crews" [value]="crew.id">
+            {{ crew.name }}
+          </option>
+        </select>
+      </td>
+      <td>{{getStateString(arrival['state'])}}</td>
+      <td>
+        <a appCursorPointer (click)="onRemove(arrival.id)">
+          <fa-icon [icon]="removeIcon" class="text-black"></fa-icon>
+        </a>
+      </td>
+    </tr>
+    }
+  </tbody>
+</ng-template>
